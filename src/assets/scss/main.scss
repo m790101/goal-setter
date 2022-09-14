@@ -1,0 +1,55 @@
+:root {
+    --primary-color: #DFF2FD;
+    --body-bg: #FFFFFF;
+    --body-color: #2A2A2A;
+    --white: #fff;
+    --btn-pink: #F67599;
+    --stepper-circle-bg: #2A2A2A;
+    --dark-gray: #4a4a4a;
+    --light-gray: #AFB1BD;
+    --pale-gray: #F0F0F5;
+    --footer-color-gray: #808080;
+    --cart-panel-bg: #383838;
+    --input-radio: #2A2A2A;
+    --input-radio-bg: #FFFFFF;
+}
+
+[ data-theme="dark"] {
+    --body-bg: #121212;
+    --body-color: #FFFFFF;
+    --white: #fff;
+    --btn-pink: #F67599;
+    --stepper-circle-bg: #333333;
+    --dark-gray: #4a4a4a;
+    --light-gray: #AFB1BD;
+    --pale-gray: #4a4a4a;
+    --footer-color-gray: #808080;
+    --cart-panel-bg: #383838;
+    --input-radio: #4a4a4a;
+    --input-radio-bg: #4a4a4a;
+}
+
+a,
+a:hover,
+a:focus {
+    color: var(--body-color);
+}
+
+
+%standard-boxshadow {
+    box-shadow: 3px 0 13px 0 rgba(100, 112, 134, 0.1);
+}
+
+
+
+html {
+    font-size: 12px;
+    height: 100%;
+}
+
+body {
+    height: 100%;
+    background: var(--body-bg);
+    color: var(--body-color);
+    font-family: "Noto Sans TC";
+}
