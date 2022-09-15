@@ -1,10 +1,9 @@
 <template>
   <div id="goal-setter">
     <Navbar/>
-    <main class="goal-setter__body">
+    <main class="goal-setter__body" >
           <router-view/>
     </main>
-
   </div>
 </template>
 
@@ -14,6 +13,7 @@
 .goal-setter__body{
   margin: 0 auto;
   max-width:900px;
+  height:100%;
 }
 
 </style>
@@ -26,7 +26,7 @@ import Navbar from './components/Navbar.vue'
 
 export default {
 components:{
-  Navbar
+  Navbar,
 }  
 }
 </script>

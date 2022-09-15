@@ -2,7 +2,13 @@
   <section class="goal-detail mt-5">
     <nav class="navbar bg-light">
       <div class="container-fluid">
-        <p class="navbar-brand fs-2 ms-3 fw-bold">{{ goal.name }}</p>
+        <p class="navbar-brand fs-2 ms-3 fw-bold" v-if="!isEdited">{{ goal.name }}</p>
+        <div v-else class="d-flex gap-3"> 
+          <input type="text" name="name" class="" v-model="nameCache" >
+          <p @click.stop.prevent="handleEdited">V</p>
+          <p @click.stop.prevent="closeEdited">X</p>
+        </div>
+        
         <div
           class="
             d-flex
@@ -12,7 +18,7 @@
             align-items-center
           "
         >
-          <button class="fs-5 btn">Edit</button>
+          <button class="fs-5 btn" @click.stop.prevent="editGoalTitle">Edit</button>
           <button class="fs-5 btn">Check as finished</button>
           <button class="fs-5 btn">Delete</button>
         </div>
@@ -28,7 +34,7 @@
         </div>
         <div class="p-3">
           <p class="fs-3">Detail:<span> +</span></p>
-          <span class="fs-4">{{ goal.text }}</span>
+          <span class="fs-4 mt-3">{{ goal.text }}</span>
         </div>
         <div class="goal-detail__body__list mt-5 px-2">
           <p class="fs-3 mt-2 px-2">Sub-goal:</p>
@@ -95,6 +101,7 @@
       @extend %standard-boxshadow; 
       border: 1.5px solid var(--pale-gray);
       border-radius: 1.5rem;
+      background-color: var(--white);
       &__text {
         &::before {
           content: "";
@@ -171,6 +178,8 @@ export default {
         subGoals: [],
       },
       isAddSubGoal: false,
+      nameCache:'',
+      isEdited:false
     };
   },
   methods: {
@@ -192,6 +201,18 @@ export default {
           id: uuidv4(),
           iscompleted: false
         })
+    },
+    editGoalTitle(){
+      this.isEdited = true
+      this.nameCache = this.goal.name
+    },
+    closeEdited(){
+      this.isEdited = false
+    },
+    handleEdited(){
+      this.goal.name = this.nameCache
+      this.isEdited = false
+      this.nameCache = ''
     }
   },
   created() {

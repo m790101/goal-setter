@@ -47,6 +47,7 @@ export default {
 
 .goal {
   @extend %standard-boxshadow;
+  background-color:var(--white);
   border: 1.5px solid var(--pale-gray);
   padding: 1.5rem;
   border-radius: 1.5rem;

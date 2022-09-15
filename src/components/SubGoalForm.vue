@@ -21,7 +21,7 @@
               <input
                 type="text"
                 id="name"
-                class="form-control sub-goal-form__input mt-2"
+                class="form-control sub-goal-form__input mt-2 fs-4"
                 placeholder="Enter your goal"
                 v-model="subGoal.name"
               />
@@ -34,14 +34,14 @@
                 type="number"
                 name='predictTime'
                 id="predictTime"
-                class="form-control sub-goal-form__input mt-2"
+                class="form-control sub-goal-form__input mt-2 fs-4"
                 placeholder="enter number(days)"
                 v-model="subGoal.predictTime"
               />
             </div>
             <div class="d-flex flex-column mt-3">
               <label for="subGoalDetail" class="form-label fs-3">Detail for sub-goal:</label>
-              <textarea name="text" id="subGoalDetail" cols="30" rows="5" placeholder="enter detail" class="form-control" v-model="subGoal.text"></textarea>
+              <textarea name="text" id="subGoalDetail" cols="30" rows="5" placeholder="enter detail" class="form-control fs-4" v-model="subGoal.text"></textarea>
             </div>
             
             <button class="btn btn-primary sub-goal-form__btn mt-4">
