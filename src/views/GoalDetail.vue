@@ -2,7 +2,7 @@
   <section class="goal-detail mt-5">
     <nav class="navbar bg-light">
       <div class="container-fluid">
-        <a class="navbar-brand fs-2 ms-3" href="#">{{goal.name}}</a>
+        <p class="navbar-brand fs-2 ms-3 fw-bold">{{ goal.name }}</p>
         <div
           class="
             d-flex
@@ -12,8 +12,9 @@
             align-items-center
           "
         >
-          <button class="fs-5 btn">標示為完成</button>
-          <button class="fs-5 btn">刪除</button>
+          <button class="fs-5 btn">Edit</button>
+          <button class="fs-5 btn">Check as finished</button>
+          <button class="fs-5 btn">Delete</button>
         </div>
       </div>
     </nav>
@@ -22,11 +23,15 @@
         <div
           class="goal-detail__body__time p-3 d-flex gap-3 align-items-center"
         >
-          <p class="fs-3">開始時間:</p>
-          <span class="fs-4">{{goal.createdAt}}</span>
+          <p class="fs-3">Start date:</p>
+          <span class="fs-4">{{ goal.createdAt }}</span>
+        </div>
+        <div class="p-3">
+          <p class="fs-3">Detail:<span> +</span></p>
+          <span class="fs-4">{{ goal.text }}</span>
         </div>
         <div class="goal-detail__body__list mt-5 px-2">
-          <p class="fs-3 mt-2 px-2">小目標:</p>
+          <p class="fs-3 mt-2 px-2">Sub-goal:</p>
           <ul class="goal-detail__body__sub-goal-wrapper mt-3">
             <li
               class="
@@ -48,22 +53,28 @@
                   mt-2
                 "
               >
-                <p class="fs-3">{{subGoal.name}}</p>
-               
+                <p class="fs-3">{{ subGoal.name }}</p>
               </div>
-              <div class="d-flex mt-2">
-                <p class="">預計完成時間：</p><span>{{subGoal.predictTime}}天</span>
+              <div class="d-flex mt-2 fs-5">
+                <p class="">Estimated finished time:</p>
+                <span>{{ subGoal.predictTime }}day</span>
               </div>
               <div class="">
-                <button class="fs-4 btn">詳情</button>
-                <button class="fs-4 btn">完成</button>
-                <button class="fs-4 btn">刪除</button>
+                <button class="fs-4 btn">Finish</button>
+                <button class="fs-4 btn">Delete</button>
               </div>
             </li>
           </ul>
           <div class="">
-              <button class="btn goal-detail__btn btn-info mt-5 fs-3">增加小目標</button>
+            <button class="btn goal-detail__btn btn-info mt-5 fs-3" @click="addNewSubGoal" :class="{disabled:isAddSubGoal}">
+              Add sub-goal
+            </button>
           </div>
+         <SubGoalForm
+         v-if="isAddSubGoal"
+         @afterCloseNewSubGoalForm="handleAfterCloseNewSubGoalForm"
+         @afterSubGoalSubmit="handleAfterSubGoalSubmit"
+         />
         </div>
       </div>
 
@@ -73,16 +84,17 @@
 </template>
 
 <style lang="scss" scoped>
+@import '../assets/scss/mixins.scss';
+
+
 .goal-detail__body {
-  &__time {
-  }
   &__list {
   }
   &__sub-goal-wrapper {
-
     &__sub-goal {
-    border: 1px solid black;
-    border-radius: 1.5rem;
+      @extend %standard-boxshadow; 
+      border: 1.5px solid var(--pale-gray);
+      border-radius: 1.5rem;
       &__text {
         &::before {
           content: "";
@@ -101,71 +113,92 @@
   position: relative;
   display: block;
   width: 100%;
-  height:50px;
+  height: 50px;
   margin: 0 auto;
   border-radius: 1.5rem;
-  &::after{
-      position: absolute;
-      content:'+';
-      left:5%;
-
+  &::after {
+    position: absolute;
+    content: "+";
+    left: 5%;
   }
 }
-
-
 </style>
 
 
 <script>
+import SubGoalForm from '../components/SubGoalForm.vue'
+import { v4 as uuidv4 } from 'uuid'
 const dummyData = {
-    goal:{
-        id:1,
-        name:'練成六塊肌',
-        iscompleted:false,
-        subGoals:[
-            {
-                id:1,
-                name:'完成一組教練菜單',
-                predictTime:7,
-                iscompleted:false
-            },
-            {
-                id:2,
-                name:'瘦到75公斤',
-                predictTime:14,
-                iscompleted:false
-            },
-            {
-                id:3,
-                name:'戒掉含糖飲料',
-                predictTime:30,
-                iscompleted:false
-            },
-        ],
-        createdAt:'2022-02-03'
-    }
-}
+  goal: {
+    id: 1,
+    name: "gain 6 pack muscle",
+    iscompleted: false,
+    text: "random text",
+    subGoals: [
+      {
+        id: 1,
+        name: "3min plank for a week",
+        predictTime: 7,
+        text: "random text",
+        iscompleted: false,
+      },
+      {
+        id: 2,
+        name: "lost weight to 80lb",
+        predictTime: 14,
+        text: "random text",
+        iscompleted: false,
+      },
+      {
+        id: 3,
+        name: "quit sugar",
+        predictTime: 30,
+        text: "random text",
+        iscompleted: false,
+      },
+    ],
+    createdAt: "2022-02-03",
+  },
+};
 export default {
-    data(){
-        return {
-            goal:{
-            id:-1,
-            name:'',
-            iscompleted:false,
-            subGoals:[],
-            }
-        }
+  data() {
+    return {
+      goal: {
+        id: -1,
+        name: "",
+        text: "",
+        iscompleted: false,
+        subGoals: [],
+      },
+      isAddSubGoal: false,
+    };
+  },
+  methods: {
+    fetchData() {
+      this.goal = {
+        ...dummyData.goal,
+      };
     },
-    methods:{
-        fetchData(){
-            this.goal = {
-                ...dummyData.goal
-            }
-        }
+    addNewSubGoal(){
+      this.isAddSubGoal = true
     },
-    created(){
-        this.fetchData()
+    handleAfterCloseNewSubGoalForm(){
+      this.isAddSubGoal = false
+    },
+    handleAfterSubGoalSubmit(playLoad){
+        console.log(playLoad)
+        this.goal.subGoals.push({
+          ...playLoad,
+          id: uuidv4(),
+          iscompleted: false
+        })
     }
-    
-}
+  },
+  created() {
+    this.fetchData();
+  },
+  components:{
+    SubGoalForm
+  }
+};
 </script>

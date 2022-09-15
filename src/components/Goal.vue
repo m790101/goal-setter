@@ -43,9 +43,11 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '../assets/scss/mixins.scss';
+
 .goal {
-  box-shadow: 3px 0 13px 0 rgba(100, 112, 134, 0.1);
-  border: 1.5px solid var(--dark-gray);
+  @extend %standard-boxshadow;
+  border: 1.5px solid var(--pale-gray);
   padding: 1.5rem;
   border-radius: 1.5rem;
 }
