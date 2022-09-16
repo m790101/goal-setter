@@ -1,7 +1,7 @@
 <template>
      <form
             action=""
-            class="mt-5 sub-goal-form"
+            class=" sub-goal-form px-5"
             @submit.stop.prevent="handleSubGoalSumbmit"
           >
             <div>
@@ -41,7 +41,7 @@
             </div>
             <div class="d-flex flex-column mt-3">
               <label for="subGoalDetail" class="form-label fs-3">Detail for sub-goal:</label>
-              <textarea name="text" id="subGoalDetail" cols="30" rows="5" placeholder="enter detail" class="form-control fs-4" v-model="subGoal.text"></textarea>
+              <textarea name="text" id="subGoalDetail" cols="30" rows="4" placeholder="enter detail" class="form-control fs-4" v-model="subGoal.text"></textarea>
             </div>
             
             <button class="btn btn-primary sub-goal-form__btn mt-4">
@@ -84,11 +84,23 @@ export default {
 
 
 <style scoped>
+  .sub-goal-form {
+    margin-top:2rem;
+}
 .sub-goal-form__btn{
+    font-size:1.5rem;
     width:100%;
+    border-radius: 1.5rem;
 }
 
 .sub-goal-form__input{
   height:45px;
 }
+@media (min-width: 1200px) {
+  .sub-goal-form {
+     margin-top:1rem;
+}
+}
+
+
 </style>
