@@ -1,0 +1,50 @@
+.btn-add {
+    background-color: #7E53D4;
+    color: var(--white);
+    border-radius: 1.5rem;
+
+    &:hover {
+        background-color: #724bc0;
+        color: var(--white);
+    }
+
+    &:active {
+        background-color: #724bc0;
+        color: var(--white);
+    }
+}
+
+
+.check-icon {
+    position: relative;
+    width:40px;
+    height:40px;
+    background-color:rgb(231, 231, 254);
+    border-radius: 50%;
+    &::before {
+        content: '\2713';
+        position: absolute;
+        left:50%;
+        transform: translate(-50%,0%);
+        font-size: 2.5rem;
+        color: green;
+
+    }
+}
+
+.cross-icon {
+    position: relative;
+    width:40px;
+    height:40px;
+    background-color:rgb(231, 231, 254);
+    border-radius: 50%;
+    &::before {
+        position: absolute;
+        content: "\00d7";
+        left:50%;
+        top:-12%;
+        transform: translate(-51%,0);
+        font-size: 2.5rem;
+        color: red;
+    }
+}

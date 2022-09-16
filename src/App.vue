@@ -10,11 +10,6 @@
 <style lang='scss'>
 @import './assets/scss/reset.scss';
 @import './assets/scss/main.scss';
-.goal-setter__body{
-  margin: 0 auto;
-  max-width:900px;
-  height:100%;
-}
 
 </style>
 
