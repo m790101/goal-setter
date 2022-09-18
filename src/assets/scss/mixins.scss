@@ -7,6 +7,7 @@
 %input-style {
     border: 1px solid var(--light-gray);
     padding: 1rem;
+    border-radius: 1.25rem;
     &:hover, &:focus {
        border-color: var(--dark-gray);
     }

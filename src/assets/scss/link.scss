@@ -8,11 +8,10 @@
         &::after{
             position: absolute;
             content:'';
-            left:50%;
+            left:0%;
             top:2.25rem;
             height:3px;
-            width:150px;
-            transform: translate(-50%,0);
+            width:140px;
             background-color: var(--link);
         }
         
@@ -22,11 +21,10 @@
         &::after{
             position: absolute;
             content:'';
-            left:50%;
+            left:0%;
             top:2.25rem;
             height:3px;
-            width:150px;
-            transform: translate(-50%,0);
+            width:140px;
             background-color: var(--link);
         }
         

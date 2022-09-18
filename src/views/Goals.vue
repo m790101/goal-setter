@@ -1,6 +1,6 @@
 <template>
   <section class="goals mt-5 mx-auto">
-    <div class="goals__left-content d-flex flex-column justify-content-between">
+    <div class="goals__left-content d-flex flex-column">
       <button
         class="btn btn-add goals__btn"
         :class="{ disabled: isAddNew }"
@@ -27,7 +27,7 @@
           <input
             type="text"
             id="name"
-            class=" new-goal-form__input mt-2 fs-4"
+            class="new-goal-form__input mt-2 fs-4"
             placeholder="Enter your goal"
             v-model="newGoal"
           />
@@ -36,19 +36,29 @@
           Add your goal
         </button>
       </form>
-      <ul class=" px-5 mt-3">
-        <li class="mt-2 fs-4 link text-center" @click="setVisibility('active')">Active goals</li>
-        <li class="mt-2 fs-4 link text-center" @click="setVisibility('finished')">
+      <ul class="goals__left-content__nav d-flex flex-column gap-3" v-else>
+        <li class="mt-2 fs-4 link" @click="setVisibility('active')">
+          <i class="bi bi-caret-right-fill fs-4"></i>
+          Active goals
+        </li>
+        <li class="mt-2 fs-4 link" @click="setVisibility('finished')">
+          <i class="bi bi-caret-right-fill fs-4"></i>
           Finished goals
         </li>
-        <li class="mt-2 fs-4 link text-center" @click="setVisibility('all')">All goals</li>
+        <li class="mt-2 fs-4 link" @click="setVisibility('all')">
+          <i class="bi bi-caret-right-fill fs-4"></i>
+          All goals</li>
       </ul>
     </div>
     <div class="goals__right-content">
+      <div>
+        <p class="fs-1 goals__right-content__title">My Goals</p>
+      </div>
       <Goal
         :initial-goals="filteredGoals"
         @afterFinishGoal="handleaAfterFinishGoal"
         @afterunFinishGoal="handleAfterunFinishGoal"
+        @afterDeleteGoal="handleAfterDeleteGoal"
       />
     </div>
   </section>
@@ -141,13 +151,15 @@ export default {
   },
   methods: {
     fetchGoals() {
-      this.goals = dummyData.goals.map(goal=> {
-        return goal = {
+      this.goals = dummyData.goals.map((goal) => {
+        return (goal = {
           ...goal,
           totalSubGoalsNum: goal.subGoals.length,
-          isCompletedLength: goal.subGoals.filter(subGoal=>subGoal.isCompleted).length
-        }
-      })
+          isCompletedLength: goal.subGoals.filter(
+            (subGoal) => subGoal.isCompleted
+          ).length,
+        });
+      });
     },
     callNewGoalForm() {
       this.isAddNew = !this.isAddNew;
@@ -168,6 +180,9 @@ export default {
     closeNewGoalForm() {
       this.isAddNew = false;
     },
+    handleAfterDeleteGoal(playLoad){
+      this.goals = this.goals.filter(goal => goal.id !== playLoad);
+    },
     handleaAfterFinishGoal(playLoad) {
       this.goals = this.goals.map((goal) => {
         if (goal.id === playLoad) {
@@ -179,21 +194,20 @@ export default {
         return goal;
       });
     },
-    handleAfterunFinishGoal(playLoad){
-      this.goals = this.goals.map(goal => {
-        if(goal.id === playLoad){
-          return goal = {
+    handleAfterunFinishGoal(playLoad) {
+      this.goals = this.goals.map((goal) => {
+        if (goal.id === playLoad) {
+          return (goal = {
             ...goal,
-            isFinished:false
-          }
+            isFinished: false,
+          });
         }
-        return goal
-        })
+        return goal;
+      });
     },
     setVisibility(visibility) {
       this.visibility = visibility;
     },
-  
   },
   created() {
     this.fetchGoals();
@@ -213,7 +227,6 @@ export default {
 @import "../assets/scss/form.scss";
 @import "../assets/scss/mixins.scss";
 
-
 .goals {
   width: 70%;
   display: flex;
@@ -223,6 +236,18 @@ export default {
     background-color: var(--white);
     border-radius: 1.5rem;
     @extend %standard-boxshadow;
+    &__nav {
+      margin-top: 80px;
+      padding-left: 40px;
+    }
+  }
+  &__right-content__title {
+    text-align:center;
+    margin: 2rem 0;
+    padding: 1rem;
+    background-color: var(--white);
+    width: 100%;
+    border-radius: 1.2rem;
   }
 }
 .goals__btn {
@@ -245,12 +270,13 @@ export default {
 }
 
 .new-goal-form__input {
-  @extend %input-style ;
-  width:100%;
+  @extend %input-style;
+  width: 100%;
   height: 45px;
 }
 
 .new-goal-form__btn {
+  border-radius: 1.5rem;
   width: 100%;
   height: 45px;
 }
@@ -271,6 +297,13 @@ export default {
     &__right-content {
       margin-left: 3rem;
       flex: 1;
+      &__title {
+        text-align:left;
+        padding-left:2rem;
+        margin-top: 0;
+        width: 50%;
+        border-radius: 1.2rem;
+      }
     }
   }
   .goals__btn {

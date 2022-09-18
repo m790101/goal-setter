@@ -8,7 +8,10 @@
     >
       <div class="goal__body text-center">
         <router-link :to="{ name: 'goal-detail', params: { id: goal.id } }">
-          <p class="fs-2">{{ goal.name }}</p>
+          <div class="d-flex align-items-center justify-content-between">
+          <p class="fs-2 fw-lighter">{{ goal.name }}</p>
+          <p class="fs-4 fw-lighter percentage">{{ percentage(goal) }}%</p>
+          </div>
         </router-link>
         <div class="progress mt-3">
           <div
@@ -17,7 +20,6 @@
             aria-label="Example with label"
             :style="{ width: percentage(goal) + '%' }"
           >
-            {{ percentage(goal) }}
           </div>
         </div>
       </div>
@@ -33,11 +35,6 @@
             v-else></i>
           <i class="bi bi-x-circle " @click.stop.prevent="deleteGoal(goal.id)" ></i>
         </div>
-        <!--
-        <div class="d-flex  mt-4 goal__footer__button-section justify-content-center gap-3">
-          <button class="fs-5 btn btn-success">完成</button>
-          <button class="fs-5 btn btn-danger">刪除</button>
-        </div>-->
       </div>
     </div>
   </div>
@@ -61,9 +58,8 @@ export default {
   },
   methods: {
     deleteGoal(goalId) {
-      this.initialGoals = this.initialGoals.filter(
-        (goal) => goal.id !== goalId
-      );
+      this.$emit('afterDeleteGoal',goalId)
+      
     },
     finishGoal(goalId) {
       this.$emit("afterFinishGoal", goalId);
@@ -78,7 +74,7 @@ export default {
           return (
             (goal.isCompletedLength / goal.totalSubGoalsNum) *
             100
-          ).toFixed(2);
+          ).toFixed(2) | 0;
         };
       },
     },
@@ -99,7 +95,8 @@ export default {
 }
 .progress {
   height: 30px;
-  border-radius: 1.5rem;;
+  border-radius: 1.5rem;
+  background-color:var(--pale-gray);
 }
 
 .progress-bar{
@@ -115,6 +112,10 @@ export default {
   background-color: rgba(0, 0, 0, 0.1);
 }
 
+.percentage{
+  color:var(--progress-bar);
+}
+
 @media (min-width: 1200px) {
   .goal-wrapper {
     display: flex;
@@ -122,7 +123,7 @@ export default {
     flex-wrap: wrap;
     .goal {
       margin-top: 0;
-      width: 300px;
+      width: 400px;
       height: 180px;
       &__body {
         height: 60%;
