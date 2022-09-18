@@ -6,35 +6,45 @@
           {{ goal.name }}
         </p>
       </div>
-      <div v-else class="d-flex gap-3">
-        <input type="text" name="name" class="" v-model="nameCache" />
-        <p @click.stop.prevent="handleEdited">V</p>
-        <p @click.stop.prevent="closeEdited">X</p>
+      <div v-else class="d-flex gap-3 justify-content-center mb-3">
+        <input
+          type="text"
+          name="name"
+          class="editGoalInput fw-bold fs-1"
+          v-model="nameCache"
+        />
       </div>
       <div
         class="
           d-flex
           goal__footer__button-section
           justify-content-center
-          gap-3
+          gap-5
           align-items-center
         "
+        v-if="!isEdited"
       >
-        <button class="fs-5 btn" @click.stop.prevent="editGoalTitle">
-          Edit
-        </button>
-        <button class="fs-5 btn">Check as finished</button>
+        <i class="bi bi-pencil-square" @click.stop.prevent="editGoal" ></i>
+        <i class="bi bi-check-circle "></i>
       </div>
       <div
-        class="goal-detail__header__time px-5 d-flex gap-3 align-items-center"
+        class="goal-detail__header__time px-5 d-flex gap-3 align-items-center mt-3"
       >
-        <p class="fs-3">Start date:</p>
-        <span class="fs-4">{{ goal.createdAt }}</span>
+        <i class="bi bi-calendar ms-5"></i>
+        <span class="fs-4">: {{ goal.createdAt }}</span>
       </div>
       <div class="px-5 goal-detail__header__detail mt-3">
-        <p class="fs-3">Detail:</p>
-        <span class="fs-4 mt-3">{{ goal.text }}</span>
+        <div v-if="!isEdited" class="d-flex gap-3">
+         <i class="bi bi-card-text ms-5"></i>
+        <p class="fs-4 mt-3 ">: {{ goal.text }}</p>
+        </div>
+        <textarea name="" id="" cols="30" rows="5" class="fs-4" v-model="detailCache" v-else></textarea>
+      <div v-if="isEdited" class="d-flex justify-content-center gap-5 mb-4 mt-3">
+        <i class="bi bi-check-circle" @click.stop.prevent="handleEdited"></i>
+        <i class="bi bi-x-circle" @click.stop.prevent="closeEdited"></i>
       </div>
+      </div>
+
     </div>
     <div class="goal-detail__btn-section">
       <div class="mx-4">
@@ -57,40 +67,11 @@
       <p class="fs-3 mt-2 p-3 goal-detail__body__list__title text-center">
         Sub-goal:
       </p>
-      <ul class="goal-detail__body__sub-goal-wrapper mt-3">
-        <li
-          class="
-            mt-5
-            d-flex
-            flex-column
-            align-items-center
-            goal-detail__body__sub-goal-wrapper__sub-goal
-            justify-content-center
-          "
-          v-for="subGoal in goal.subGoals"
-          :key="subGoal.id"
-          
-        >
-          <div
-            class="
-              goal-detail__body__sub-goal-wrapper__sub-goal__text
-              d-flex
-              align-items-center
-              mt-2
-            "
-          >
-            <p class="fs-3">{{ subGoal.name }}</p>
-          </div>
-          <div class="d-flex mt-2 fs-5">
-            <p class="">Estimated finished time:</p>
-            <span>{{ subGoal.predictTime }}day</span>
-          </div>
-          <div class="mt-3 d-flex gap-5">
-            <button class=" check-icon"></button>
-            <button class=" cross-icon" @click.stop.prevent="deleteSubGoal(subGoal.id)"></button>
-          </div>
-        </li>
-      </ul>
+      <p v-if="!goal.subGoals.length" class="fs-1 text-center mt-5">You have no Sub-goals</p>
+      <SubGoal
+      :initialSubGoals="goal.subGoals"
+      @afterDeleteSubGoal="handleAfterDeleteSubGoal"
+      />
     </div>
   </section>
 </template>
@@ -107,6 +88,14 @@
     min-height: 120px;
   }
 }
+.editGoalInput {
+  @extend %input-style;
+}
+
+textarea{
+  @extend %input-style;
+  width:100%;
+}
 
 .goal-detail__body {
   margin-top: 2rem;
@@ -120,17 +109,7 @@
     border-radius: 1.5rem;
     @extend %standard-boxshadow;
   }
-  &__sub-goal-wrapper {
-    &__sub-goal {
-      @extend %standard-boxshadow;
-      border: 1.5px solid var(--pale-gray);
-      border-radius: 1.5rem;
-      background-color: var(--white);
-      height:150px;
-      &__text {
-      }
-    }
-  }
+
 }
 .goal-detail__btn-section {
   margin-top: 2rem;
@@ -182,6 +161,7 @@
 
 <script>
 import SubGoalForm from "../components/SubGoalForm.vue";
+import SubGoal from '../components/SubGoal'
 import { v4 as uuidv4 } from "uuid";
 const dummyData = {
   goal: {
@@ -226,7 +206,8 @@ export default {
         subGoals: [],
       },
       isAddSubGoal: false,
-      nameCache: "",
+      nameCache: '',
+      detailCache:'',
       isEdited: false,
     };
   },
@@ -243,36 +224,40 @@ export default {
       this.isAddSubGoal = false;
     },
     handleAfterSubGoalSubmit(playLoad) {
-      if(!playLoad.name)return
+      if (!playLoad.name) return;
       this.goal.subGoals.push({
         ...playLoad,
         id: uuidv4(),
         iscompleted: false,
       });
-      this.isAddSubGoal = false
-
+      this.isAddSubGoal = false;
     },
-    editGoalTitle() {
+    editGoal() {
       this.isEdited = true;
       this.nameCache = this.goal.name;
+      this.detailCache = this.goal.text
     },
     closeEdited() {
       this.isEdited = false;
     },
     handleEdited() {
       this.goal.name = this.nameCache;
+      this.goal.text = this.detailCache
       this.isEdited = false;
-      this.nameCache = "";
+      this.nameCache = '';
+      this.detailCache = ''
+
     },
-    deleteSubGoal(subGoalId){
-      this.goal.subGoals = this.goal.subGoals.filter(x => x.id !== subGoalId)
-    }
+    handleAfterDeleteSubGoal(playLoad) {
+      this.goal.subGoals = this.goal.subGoals.filter((x) => x.id !== playLoad);
+    },
   },
   created() {
     this.fetchData();
   },
   components: {
     SubGoalForm,
+    SubGoal
   },
 };
 </script>

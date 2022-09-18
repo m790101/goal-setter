@@ -1,4 +1,14 @@
+
+
 %standard-boxshadow {
     box-shadow: 3px 0 13px 0 rgba(100, 112, 134, 0.1);
 }
+
+%input-style {
+    border: 1px solid var(--light-gray);
+    padding: 1rem;
+    &:hover, &:focus {
+       border-color: var(--dark-gray);
+    }
+  }
 

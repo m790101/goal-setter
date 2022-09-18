@@ -1,14 +1,14 @@
 <template>
   <nav class="navbar navbar-expand-lg">
     <div class="container-fluid px-5 d-flex justify-content-between">
-      <router-link class="navbar-brand fs-2" to="/">Goal-Setter</router-link>
+      <router-link class="navbar-brand fs-2 fw-bold" to="/">Goal-Setter</router-link>
       <div class="menu">
         <ul class="d-flex">
           <li>
-            <a href="" class="fs-3 me-4">How to use</a>
+            <a href="" class="fs-2 mx-5 link">How to use</a>
           </li>
           <li>
-            <a href="" class="fs-3">Logout</a>
+            <a href="" class="fs-2 ms-5 link">Logout</a>
           </li>
         </ul>
       </div>
@@ -19,10 +19,10 @@
           v-if="isToggleMenu"
         >
           <li class="">
-            <a href="" class="fs-3">How to use?</a>
+            <a href="" class="fs-3 link">How to use?</a>
           </li>
-          <li class="mt-3">
-            <a href="" class="fs-3">Logout</a>
+          <li class="mt-3 ">
+            <a href="" class="fs-3 link">Logout</a>
           </li>
         </ul>
       </div>
@@ -67,9 +67,7 @@
       top: 80px;
       width: 100vw;
       z-index: 999;
-      & li {
-        border-bottom: 0.5px solid black;
-      }
+
     }
   }
   .menu {

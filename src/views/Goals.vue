@@ -27,7 +27,7 @@
           <input
             type="text"
             id="name"
-            class="form-control new-goal-form__input mt-2 fs-4"
+            class=" new-goal-form__input mt-2 fs-4"
             placeholder="Enter your goal"
             v-model="newGoal"
           />
@@ -36,13 +36,20 @@
           Add your goal
         </button>
       </form>
-      <ul class="d-flex flex-column justify-content-center text-center mt-3">
-        <li class="mt-2 fs-5"><a href="#">Finished goal</a></li>
-        <li class="mt-2 fs-5"><a href="#">Finished goal</a></li>
+      <ul class=" px-5 mt-3">
+        <li class="mt-2 fs-4 link text-center" @click="setVisibility('active')">Active goals</li>
+        <li class="mt-2 fs-4 link text-center" @click="setVisibility('finished')">
+          Finished goals
+        </li>
+        <li class="mt-2 fs-4 link text-center" @click="setVisibility('all')">All goals</li>
       </ul>
     </div>
     <div class="goals__right-content">
-      <Goal :initial-goals="goals" />
+      <Goal
+        :initial-goals="filteredGoals"
+        @afterFinishGoal="handleaAfterFinishGoal"
+        @afterunFinishGoal="handleAfterunFinishGoal"
+      />
     </div>
   </section>
 </template>
@@ -62,16 +69,65 @@ const dummyData = {
     {
       id: 1,
       name: "gain 6 pack muscle",
+      isFinished: false,
+      subGoals: [
+        {
+          id: 1,
+          name: "3min plank for a week",
+          predictTime: 7,
+          text: "random text",
+          isCompleted: true,
+        },
+        {
+          id: 2,
+          name: "lost weight to 80lb",
+          predictTime: 14,
+          text: "random text",
+          isCompleted: false,
+        },
+        {
+          id: 3,
+          name: "quit sugar",
+          predictTime: 30,
+          text: "random text",
+          isCompleted: false,
+        },
+      ],
     },
     {
       id: 2,
       name: "grow to 7'0",
+      isFinished: false,
+      subGoals: [
+        {
+          id: 1,
+          name: "3min plank for a week",
+          predictTime: 7,
+          text: "random text",
+          isCompleted: false,
+        },
+      ],
     },
     {
       id: 3,
       name: "watch John Wick 4",
+      isFinished: false,
+      subGoals: [
+        {
+          id: 1,
+          name: "3min plank for a week",
+          predictTime: 7,
+          text: "random text",
+          isCompleted: false,
+        },
+      ],
     },
   ],
+};
+const filters = {
+  all: (goals) => goals,
+  active: (goals) => goals.filter((goal) => !goal.isFinished),
+  finished: (goals) => goals.filter((goal) => goal.isFinished),
 };
 export default {
   data() {
@@ -80,11 +136,18 @@ export default {
       currentUser: dummyUser.currentUser,
       isAddNew: false,
       newGoal: "",
+      visibility: "active",
     };
   },
   methods: {
     fetchGoals() {
-      this.goals = dummyData.goals;
+      this.goals = dummyData.goals.map(goal=> {
+        return goal = {
+          ...goal,
+          totalSubGoalsNum: goal.subGoals.length,
+          isCompletedLength: goal.subGoals.filter(subGoal=>subGoal.isCompleted).length
+        }
+      })
     },
     callNewGoalForm() {
       this.isAddNew = !this.isAddNew;
@@ -97,15 +160,48 @@ export default {
       this.goals.push({
         id: uuidv4(),
         name: this.newGoal,
+        isFinished: false,
+        subGoals: [],
       });
       this.newGoal = "";
     },
     closeNewGoalForm() {
       this.isAddNew = false;
     },
+    handleaAfterFinishGoal(playLoad) {
+      this.goals = this.goals.map((goal) => {
+        if (goal.id === playLoad) {
+          return (goal = {
+            ...goal,
+            isFinished: true,
+          });
+        }
+        return goal;
+      });
+    },
+    handleAfterunFinishGoal(playLoad){
+      this.goals = this.goals.map(goal => {
+        if(goal.id === playLoad){
+          return goal = {
+            ...goal,
+            isFinished:false
+          }
+        }
+        return goal
+        })
+    },
+    setVisibility(visibility) {
+      this.visibility = visibility;
+    },
+  
   },
   created() {
     this.fetchGoals();
+  },
+  computed: {
+    filteredGoals() {
+      return filters[this.visibility](this.goals);
+    },
   },
   components: {
     Goal,
@@ -116,6 +212,7 @@ export default {
 <style lang="scss" scoped>
 @import "../assets/scss/form.scss";
 @import "../assets/scss/mixins.scss";
+
 
 .goals {
   width: 70%;
@@ -148,6 +245,8 @@ export default {
 }
 
 .new-goal-form__input {
+  @extend %input-style ;
+  width:100%;
   height: 45px;
 }
 
@@ -163,7 +262,7 @@ export default {
     flex-direction: row;
     &__left-content {
       width: 20%;
-      max-height: 300px;
+      max-height: 400px;
       padding: 1.5rem;
       background-color: var(--white);
       border-radius: 1.5rem;

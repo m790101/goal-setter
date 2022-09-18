@@ -1,0 +1,34 @@
+
+.link{
+    cursor: pointer;
+    position: relative;
+    color:var(--light-gray);
+    &:hover{
+        color: var(--link);
+        &::after{
+            position: absolute;
+            content:'';
+            left:50%;
+            top:2.25rem;
+            height:3px;
+            width:150px;
+            transform: translate(-50%,0);
+            background-color: var(--link);
+        }
+        
+    }
+    &:active{
+        color: var(--link);
+        &::after{
+            position: absolute;
+            content:'';
+            left:50%;
+            top:2.25rem;
+            height:3px;
+            width:150px;
+            transform: translate(-50%,0);
+            background-color: var(--link);
+        }
+        
+    }
+}
